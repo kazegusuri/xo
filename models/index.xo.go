@@ -11,6 +11,7 @@ type Index struct {
 	SeqNo     int    // seq_no
 	Origin    string // origin
 	IsPartial bool   // is_partial
+	Comment   string // comment
 }
 
 // PgTableIndexes runs a custom query, returning results as Index.
@@ -63,7 +64,8 @@ func MyTableIndexes(db XODB, schema string, table string) ([]*Index, error) {
 	// sql query
 	const sqlstr = `SELECT ` +
 		`DISTINCT index_name, ` +
-		`NOT non_unique AS is_unique ` +
+		`NOT non_unique AS is_unique, ` +
+		`index_comment AS comment ` +
 		`FROM information_schema.statistics ` +
 		`WHERE index_name <> 'PRIMARY' AND index_schema = ? AND table_name = ?`
 
@@ -81,7 +83,7 @@ func MyTableIndexes(db XODB, schema string, table string) ([]*Index, error) {
 		i := Index{}
 
 		// scan
-		err = q.Scan(&i.IndexName, &i.IsUnique)
+		err = q.Scan(&i.IndexName, &i.IsUnique, &i.Comment)
 		if err != nil {
 			return nil, err
 		}
