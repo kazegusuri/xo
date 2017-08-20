@@ -691,10 +691,11 @@ func (tl TypeLoader) LoadTableIndexes(args *ArgType, typeTpl *Type, ixMap map[st
 
 		// create index template
 		ixTpl := &Index{
-			Schema: args.Schema,
-			Type:   typeTpl,
-			Fields: []*Field{},
-			Index:  ix,
+			Schema:  args.Schema,
+			Type:    typeTpl,
+			Fields:  []*Field{},
+			Index:   ix,
+			Comment: ix.Comment,
 		}
 
 		// load index columns

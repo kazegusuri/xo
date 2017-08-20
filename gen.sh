@@ -148,6 +148,7 @@ SELECT
   0::integer AS seq_no,
   ''::varchar AS origin,
   false::boolean AS is_partial
+  ''::varchar AS comment
 FROM pg_index i
   JOIN ONLY pg_class c ON c.oid = i.indrelid
   JOIN ONLY pg_namespace n ON n.oid = c.relnamespace
@@ -263,7 +264,8 @@ ENDSQL
 $XOBIN $MYDB -a -N -M -B -T Index -F MyTableIndexes -o $DEST $EXTRA << ENDSQL
 SELECT
   DISTINCT index_name,
-  NOT non_unique AS is_unique
+  NOT non_unique AS is_unique,
+  index_comment AS comment
 FROM information_schema.statistics
 WHERE index_name <> 'PRIMARY' AND index_schema = %%schema string%% AND table_name = %%table string%%
 ENDSQL
